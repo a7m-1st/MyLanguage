@@ -25,20 +25,18 @@ class Evaluator(MyLangListener):
               # self.process_statement(stmt)
               print(stmt.getText())
 
-
     # Entering an ifElseStatement
     def enterIfElseStatement(self, ctx):
-        # Handle the if condition
         if self.evaluate_condition(ctx.condition()):
             print("Condition is true, executing if-block")
             for stmt in ctx.statement():
                 self.process_statement(stmt)
         else:
-            # Handle elif conditions
+            # Handle elif statements
             print("Condition is false, checking elif blocks")
             elif_blocks = ctx.ELIF()
             for i, elif_cond in enumerate(elif_blocks):
-                if self.evaluate_condition(ctx.condition(i)):  # Handle multiple elif conditions
+                if self.evaluate_condition(ctx.condition(i)):
                     print(f"Condition of elif {i + 1} is true, executing elif block")
                     for stmt in ctx.statement(i):
                         self.process_statement(stmt)
@@ -46,7 +44,7 @@ class Evaluator(MyLangListener):
             # Handle else block if present
             if ctx.ELSE():
                 print("Executing else block")
-                for stmt in ctx.statement(len(elif_blocks)):  # Assuming else comes after all elifs
+                for stmt in ctx.statement():
                     self.process_statement(stmt)
 
     # Processing each statement
@@ -62,6 +60,8 @@ class Evaluator(MyLangListener):
             self.enterIfElseStatement(stmt.ifElseStatement())
         elif stmt.unlessStatement():
             self.enterUnlessStatement(stmt.unlessStatement())
+        elif stmt.doWhileStatement():  
+            self.enterDoWhileStatement(stmt.doWhileStatement())
 
     # Evaluating an expression (simplified)
     def evaluate_expression(self, expr_ctx):
@@ -103,7 +103,6 @@ class Evaluator(MyLangListener):
             first_condition = self.evaluate_condition(condition_ctx[0])
             return first_condition  # Return the evaluation of the first condition
         else:
-            print(f"Evaluating condition: {condition_ctx.getText()}")
             if condition_ctx.COMPARISON_OP():
                 left = self.evaluate_expression(condition_ctx.expression(0))
                 right = self.evaluate_expression(condition_ctx.expression(1))
@@ -133,11 +132,26 @@ class Evaluator(MyLangListener):
 
       
     # Continue with the evaluation...
+
+    # Handle a doWhileStatement 
+    def enterDoWhileStatement(self, ctx):
+        first_run = True
+        while True:  # runs at least once
+            print(f"Executing do-while block...")
+            for stmt in ctx.statement():
+                self.process_statement(stmt)
+
+            # Check the condition after executing the block 
+            if not first_run:
+                if self.evaluate_condition(ctx.condition()):
+                    break  # Exit the loop if condition is True
+            first_run = False
+
     # Handle unless statement
     def enterUnlessStatement(self, ctx):
         condition = self.evaluate_condition(ctx.condition())
         if not condition:  # Execute the block only if the condition is False
-            print("Entering unless block because condition is False")
+            print("Executing unless block...")
             for stmt in ctx.statement():
                 self.process_statement(stmt)
 

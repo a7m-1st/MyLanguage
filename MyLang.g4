@@ -9,6 +9,7 @@ statement    : variableDeclaration
               | forEachStatement
               | forRangeStatement
               | unlessStatement
+              | doWhileStatement
               | PASS;
 variableDeclaration : LET ID '=' expression;
 printStatement      : PRINT expression;
@@ -29,7 +30,7 @@ forRangeStatement
     : 'for' '(' ID 'from' INT 'to' INT ')' '{' statement* '}';
 unlessStatement      
     : 'unless' '(' condition ')' '{' statement* '}';
-
+doWhileStatement : 'do' '{' statement* '}' 'while' '(' condition ')';
 comment : '//' STRING* ;
 multilineComment : '///' STRING* '///';
 iterable            : array

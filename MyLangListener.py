@@ -98,6 +98,15 @@ class MyLangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MyLangParser#doWhileStatement.
+    def enterDoWhileStatement(self, ctx:MyLangParser.DoWhileStatementContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#doWhileStatement.
+    def exitDoWhileStatement(self, ctx:MyLangParser.DoWhileStatementContext):
+        pass
+
+
     # Enter a parse tree produced by MyLangParser#comment.
     def enterComment(self, ctx:MyLangParser.CommentContext):
         pass
