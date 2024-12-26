@@ -1,24 +1,20 @@
 from antlr4 import *
 from MyLangLexer import MyLangLexer
 from MyLangParser import MyLangParser
-from MyEvaluator_copy import Evaluator
+from MyEvaluator import Evaluator
 
 # Input from the user
 expression = """
-let ab = 5
-let bc = 10
+let a = (5+1)
+print "ahmed is a good guy"
 
-if(true) {
-  print ab
+if(1 > 5) {
+  print a
+} elif(1 > 5) {
+  print 5
 }
 
-if(ab > 3) {
-  print bc
-}
 
-while(true) {
-  print ab
-}
 
 
 """

@@ -8,6 +8,7 @@ statement    : variableDeclaration
               | ifElseStatement
               | forEachStatement
               | forRangeStatement
+              | unlessStatement
               | PASS;
 variableDeclaration : LET ID '=' expression;
 printStatement      : PRINT expression;
@@ -26,7 +27,8 @@ forEachStatement
     : 'for' '(' ID 'in' iterable ')' '{' statement* '}';
 forRangeStatement
     : 'for' '(' ID 'from' INT 'to' INT ')' '{' statement* '}';
-
+unlessStatement      
+    : 'unless' '(' condition ')' '{' statement* '}';
 
 comment : '//' STRING* ;
 multilineComment : '///' STRING* '///';
@@ -40,8 +42,8 @@ pair  : STRING ':' expression ;
 condition           : expression COMPARISON_OP expression
                     | BOOLEAN ;
 expression          : INT
-                    | ID
                     | STRING
+                    | ID
                     | BOOLEAN
                     | array
                     | object
@@ -85,4 +87,3 @@ LITERAL : INT
         | BOOLEAN ;
 WS: [ \t\r\n]+ -> skip;
 NEWLINE : '\r'? '\n' ;
-

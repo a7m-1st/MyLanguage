@@ -1,77 +1,90 @@
 grammar MyLang;
 
-program      : {statement NEWLINE} ;
+
+program      : statement+ ;
 statement    : variableDeclaration
               | printStatement
+              | whileStatement
+              | ifElseStatement
               | forEachStatement
               | forRangeStatement
-              | whileLimitStatement
-              | whileStatement
               | unlessStatement
-              | ifElseStatement
-              | passStatement
-              | returnStatement ;
-variableDeclaration : 'let' ID '=' expression;
-printStatement      : 'print' expression;
-forEachStatement    : 'for' '(' ID 'in' iterable ')' '{' {statement} '}' ;
-forRangeStatement   : 'for' '(' ID 'from' INT 'to' INT ')' '{' {statement} '}';
-forLoopStatement : 'for' '(' INT ')' '{' {statement} '}' ;
-forStepStatement : 'for' ID 'from' INT 'to' INT 'step' INT '{' {statement} '}';
-whileStatement : 'while' '(' condition ')' '{' {statement} '}' ;
-whileLimitStatement : 'while' '(' condition ')' 'limit' '(' INT ')' '{' {statement} '}' ;
-doWhileStatement : 'do' '{' {statement} '}' 'while' '(' condition ')' ;
-unlessStatement     : 'unless' '(' condition ')' '{' {statement} '}';
-returnStatement : 'return' expression ';' ;
+              | PASS;
+variableDeclaration : LET ID '=' expression;
+printStatement      : PRINT expression;
 
+whileStatement : WHILE '(' condition ')' '{' {statement} '}' ;
 ifElseStatement 
-    : 'if' '(' condition ')' '{' (statement)* '}'
-      ( 'else if' '(' condition ')' '{' (statement)* '}' )*
-      ( 'else' '{' (statement)* '}' )? ;
-
+    : IF '(' condition ')' '{' (statement)* '}'
+      ( ELIF '(' condition ')' '{' (statement)* '}' )*
+      ( ELSE '{' (statement)* '}' )? ;
 switchStatement 
-    : 'switch' '(' expression ')' '{' 
-        ( 'case' literal (statement)+ )* 
-        ( 'default' (statement)+ )? 
-      '}' 'end switch' ;
+    : SWITCH '(' expression ')' '{' 
+        ( CASE LITERAL (statement)+ )* 
+        ( DEFAULT (statement)+ )? 
+      '}' END_SWITCH;
+forEachStatement
+    : 'for' '(' ID 'in' iterable ')' '{' statement* '}';
+forRangeStatement
+    : 'for' '(' ID 'from' INT 'to' INT ')' '{' statement* '}';
+unlessStatement
+    : 'unless' '(' condition ')' '{' (statement)* '}';
 
-passStatement       : 'pass' ;
 comment : '//' STRING* ;
 multilineComment : '///' STRING* '///';
 iterable            : array
-                    | object
-                    | ID ;
-array               : '[' {expression (',' expression)*} ']' ;
-object              : '{' {STRING ':' expression (',' STRING ':' expression)*} '}' ;
-condition           : expression comparisonOperator expression
+                    | object 
+                    | ID
+                    | INT ;
+array               : '[' expression (',' expression)* ']' ;
+object : '{' (pair (',' pair)*)? '}' ;
+pair  : STRING ':' expression ;
+condition           : expression COMPARISON_OP expression
                     | BOOLEAN ;
 expression          : INT
-                    | ID
                     | STRING
+                    | ID
+                    | BOOLEAN
                     | array
                     | object
-                    | functionCall
-                    | '(' expression operator expression ')'
+                    | '(' expression OPERATOR expression ')'
                     | expression '?' expression ':' expression ;
-functionCall        : ID '(' {expression (',' expression)*} ')' ;
-operator            : '+' 
+
+
+
+WHILE   : 'while';
+LET     : 'let' ;
+ELIF    : 'else if';
+PRINT   : 'print' ;
+RETURN  : 'return' ;
+IF      : 'if' ;
+ELSE    : 'else' ;
+SWITCH  : 'switch' ;
+CASE    : 'case' ;
+DEFAULT : 'default' ;
+END_SWITCH : 'end switch' ;
+PASS       : 'pass' ;
+
+OPERATOR            : '+' 
                     | '-' 
                     | '*' 
                     | '/' 
                     | '%' ;
-comparisonOperator  : '>' 
+COMPARISON_OP  : '>' 
                     | '<' 
                     | '==' 
                     | '!=' 
                     | '>=' 
                     | '<=' ;
 BOOLEAN             : 'true' | 'false' ;
-INT       : digit+ ;
-STRING    : '\'' ( ~[\'\\] | '\\' . )* '\'' ;
+INT       : DIGIT+ ;
+STRING : '"' ( ~['\\] | '\\' . )* '"' ;
 
-letter    : 'a' .. 'z' | 'A' .. 'Z' | '_';  
-digit     : '0' .. '9'; 
-ID        : letter (letter | digit)* ;  
-literal : INT
+fragment LETTER    : 'a' .. 'z' | 'A' .. 'Z' | '_';  
+fragment DIGIT     : '0' .. '9'; 
+ID        : LETTER (LETTER | DIGIT)* ;
+LITERAL : INT
         | STRING
         | BOOLEAN ;
-
+WS: [ \t\r\n]+ -> skip;
+NEWLINE : '\r'? '\n' ;
