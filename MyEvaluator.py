@@ -222,7 +222,7 @@ class Evaluator(MyLangListener):
                 
     # Entering a forLoopStatement
     def enterForLoopStatement(self, ctx):
-        print("Entering a for loop...")
+        # print("Entering a for loop...")
         
         loop_count = ctx.INT()
         loop_count_INT = int(loop_count.getText()) - 1
@@ -235,7 +235,7 @@ class Evaluator(MyLangListener):
             print("Error: parameter must be a positive integer.")
             return
 
-        for i in range(loop_count_INT):
+        for i in range(loop_count_INT+1):
             block = ctx.block()  # Access the block
             if block:
                 for stmt in block.statement():
