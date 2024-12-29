@@ -358,10 +358,16 @@ class Evaluator(MyLangListener):
             return
         
         count = 0
-        # Execute the while loop as long as the condition holds true and within the limit
-        while self.evaluate_condition2(ctx.condition()) and count < limit:
+        while count < limit:
+            # Check condition first
+            if not self.evaluate_condition(ctx.condition()):
+                break
+            
+            # Execute all statements in the while block
             block = ctx.block()  # Access the block
             if block:
                 for stmt in block.statement():
                     self.process_statement(stmt)
-            count += 1  # Increment the loop count
+                
+            count += 1
+
