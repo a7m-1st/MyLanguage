@@ -185,7 +185,6 @@ class Evaluator(MyLangListener):
     def enterDoWhileStatement(self, ctx):
         first_run = True
         while True:  # runs at least once
-            print(f"Executing do-while block...")
             for stmt in ctx.statement():
                 self.process_statement(stmt)
 
@@ -199,7 +198,6 @@ class Evaluator(MyLangListener):
     def enterUnlessStatement(self, ctx):
         condition = self.evaluate_condition(ctx.condition())
         if not condition:  # Execute the block only if the condition is False
-            print("Executing unless block...")
             for stmt in ctx.statement():
                 self.process_statement(stmt)
 
