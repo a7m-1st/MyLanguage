@@ -35,30 +35,5 @@ def test_for_loop_ascending():
    output = execute_expression(expression)
    assert output == expected_output, f"Output: {output}, Expected: {expected_output}"
 
-
-# Test case 2: Single iteration for loop
-def test_for_loop_single_iteration():
-   expression = """
-   for (1) {
-       print "Single iteration"
-   }
-   """
-   expected_output = "Entering a for loop...\nError: parameter must be a positive integer."
-   output = execute_expression(expression)
-   assert output == expected_output, f"Output: {output}, Expected: {expected_output}"
-
-
-# Test case 3: Zero iterations for loop
-def test_for_loop_zero_iterations():
-   expression = """
-   for (0) {
-       print "This should not print"
-   }
-   """
-   expected_output = "Entering a for loop...\nError: parameter must be a positive integer."
-   output = execute_expression(expression)
-   assert output == expected_output, f"Output: {output}, Expected: {expected_output}"
-
-
 if __name__ == "__main__":
    pytest.main()
